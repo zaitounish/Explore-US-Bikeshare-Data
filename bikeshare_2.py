@@ -28,9 +28,14 @@ def get_filters():
 
     while True:
         state = input("Would you like to see data for chicago, new york city, or washington \n")
+        state = state.lower()
         stateNames = ['chicago', 'new york city', 'washington']
+      #  non_case_senstive_stateNames = stateNames.lower()
+      #  stateNames = [eachState.lower() for eachState in stateNames]
+
+      
         if state not in stateNames :
-            print("sorry wrong state try again \nPlease choose from", stateNames, " !")
+            print("sorry wrong state try again \nPlease choose from",stateNames , " !")
             continue
         else:
             break
@@ -42,7 +47,8 @@ def get_filters():
 
     while True:
         month = input("Which month would you like to filter by? January, February, March, April, May, June or type "'all'" if you do not have any preference?\n").title()
-        months = ["January", "February", "March", "April", "May", "June", "all"]
+        month = month.lower()
+        months = ["january", "february", "march", "april", "may", "june", "all"]
         if month not in months :
             print("sorry wrong input \nPlease choose from", months, " !")
             continue
@@ -54,7 +60,8 @@ def get_filters():
 
     while True:
         day = input("Are you looking for a particular day? If so kindly enter the day as follows: Sunday , Monday, Tuesday, Wednesday , Thursday , Friday , Saturday or type "'all'" if you do not have any preference.\n").title()
-        days = ["Sunday" , "Monday", "Tuesday", "Wednesday" , "Thursday" , "Friday" , "Saturday"]
+        day = day.lower()
+        days = ["sunday" , "monday", "tuesday", "wednesday" , "thursday" , "friday" , "saturday"]
         if day not in days :
             print("sorry wrong input \nPlease choose from", days, " !")
             continue
@@ -208,9 +215,22 @@ def user_stats(df):
     most_common_year_of_the_birth = int(df['Birth Year'].value_counts().idxmax())
     print ("the most common year of the birth is: ".title(), most_common_year_of_the_birth)
 
+
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+
+    start_loc = 0
+    while True:
+        view_data = input("Would you like to view 5 rows of individual trip data? Enter yes or no?")
+        if view_data.lower() == 'yes':
+            
+            print(df.iloc[start_loc:start_loc+5])
+            start_loc += 5
+            
+        
+        view_display = input("Do you wish to continue?: ").lower()
+        
 
 def main():
     while True:
