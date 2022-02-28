@@ -49,6 +49,7 @@ def get_filters():
         month = input("Which month would you like to filter by? January, February, March, April, May, June or type "'all'" if you do not have any preference?\n").title()
         month = month.lower()
         months = ["january", "february", "march", "april", "may", "june", "all"]
+        
         if month not in months :
             print("sorry wrong input \nPlease choose from", months, " !")
             continue
@@ -61,7 +62,7 @@ def get_filters():
     while True:
         day = input("Are you looking for a particular day? If so kindly enter the day as follows: Sunday , Monday, Tuesday, Wednesday , Thursday , Friday , Saturday or type "'all'" if you do not have any preference.\n").title()
         day = day.lower()
-        days = ["sunday" , "monday", "tuesday", "wednesday" , "thursday" , "friday" , "saturday"]
+        days = ["sunday" , "monday", "tuesday", "wednesday" , "thursday" , "friday" , "saturday", "all"]
         if day not in days :
             print("sorry wrong input \nPlease choose from", days, " !")
             continue
@@ -88,15 +89,17 @@ def load_data(city, month, day):
     
     df['Start Time'] = pd.to_datetime(df['Start Time'])
     
-    df['month'] = df['Start Time'].dt.month_name
+    df['month'] = df['Start Time'].dt.month_name()
     
     df['day_of_week'] = df['Start Time'].dt.day_name()
     
     df['hour'] = df['Start Time'].dt.hour
     
-    df = df[df['month'] == month]
+    if month != 'all':
+        df = df[df['month'] == month.title()]
     
-    df = df[df['day_of_week'] == day]
+    if day != 'all':
+        df = df[df['day_of_week'] == day.title()]
     
     return df
 
@@ -141,7 +144,7 @@ def station_stats(df):
 
     # TO DO: display most commonly used start station
 
-    mc_sstation = df['Start station'].value_counts().idxmax()
+    mc_sstation = df['Start Station'].value_counts().idxmax()
   
     print ("the most commonly used start station is: ".title(), mc_sstation)
 
@@ -193,14 +196,14 @@ def user_stats(df):
 
     # TO DO: Display counts of user types
 
-    user_types = df['User Type'].value_counts().counts()
+    user_types = df['User Type'].value_counts()
     
     print ("counts of user type is: ".title(), user_types)
     
     
         # TO DO: Display counts of gender
     
-    cof_gender = df['Gender'].value_counts().counts()
+    cof_gender = df['Gender'].value_counts()
     
     print ("counts of gender is: ".title(), cof_gender)
     
@@ -222,24 +225,20 @@ def user_stats(df):
 
     start_loc = 0
     while True:
-        view_data = input("Would you like to view 5 rows of individual trip data? Enter yes or no?")
+        view_data = input("Would you like to view 5 rows of individual trip data? Enter yes or no?\n")
         if view_data.lower() == 'yes':
             
             print(df.iloc[start_loc:start_loc+5])
             start_loc += 5
-	
-	else:
-	    break
-            
-        
-        view_display = input("Do you wish to continue?: ").lower()
-        
+            continue
+        else:
+            break  
 
 def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
-
+        
         time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
